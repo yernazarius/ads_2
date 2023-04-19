@@ -1,6 +1,15 @@
-public interface myList<T> extends Iterable<T> {
-    void add(T item);
-    T get(int index);
+import java.util.Iterator;
+
+public interface myList<T extends Comparable<T>> extends Iterable<T> {
     int size();
-    void remove(int index);
+    boolean contains(Object o);
+    void add(T item);
+    void add(T item, int index);
+    boolean remove(T item);
+    T remove(int index);
+    void clear();
+    T get(int index);
+    int indexOf(Object o);
+    int lastIndexOf(Object o);
+    void sort();
 }
