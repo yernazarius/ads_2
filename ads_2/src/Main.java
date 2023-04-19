@@ -1,5 +1,7 @@
 public class Main {
     public static void main(String[] args) {
+        System.out.println("ARRAY LIST");
+
         myArrayList<Integer> arrayList = new myArrayList<>();
         arrayList.add(10);
         arrayList.add(12);
@@ -31,5 +33,25 @@ public class Main {
         System.out.println("Sorted ArrayList: ");
         for (int a: arrayList) System.out.print(a + " ");
 
+        System.out.println();
+        System.out.println("LINKED LIST");
+        myLinkedList<Integer> linkedList = new myLinkedList<>();
+        linkedList.add(10);
+        linkedList.add(12);
+        linkedList.add(423);
+        linkedList.add(11);
+        linkedList.add(4);
+        linkedList.add(511);
+        for (int a: linkedList)
+            System.out.print(a + " ");
+        linkedList.add(1111,4);
+        System.out.println();
+        for (int a: linkedList)
+            System.out.print(a + " ");
+        System.out.println();
+        linkedList.sort();
+        System.out.println("Sorted LinkedList: ");
+        for (int a: linkedList)
+            System.out.print(a + " ");
     }
 }
