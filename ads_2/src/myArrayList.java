@@ -1,61 +1,112 @@
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 
-public class myArrayList<T> implements myList<T>{
-    private Object[] data;
+public class myArrayList<T extends Comparable<T>> implements myList<T> {
     private int size;
+    private Object[] data;
 
     public myArrayList() {
-        this.data = new Object[10];
-        this.size = 0;
+        data = new Object[10];
     }
-    @Override
-    public int size(){
-        return size;
+
+    private void increaseCapacity() {
+        Object[] newArray = new Object[(int) (data.length * 2)];
+        for (int i = 0; i < data.length; i++)
+            newArray[i] = data[i];
+        data = newArray;
     }
+
+    public int size() {
+        return this.size;
+    }
+
     @Override
     public boolean contains(Object o) {
-        for(int i = 0; i < size; i++){
-            if(data[i].equals(o)) return true;
-        }
+        for (int i = 0; i < this.size; i++)
+            if (data[i].equals(o)) return true;
 
         return false;
     }
-    private void increaseCapacity(){
-        Object[] temp = new Object[size * 2];
-        for(int i = 0; i < size; i++) {
-            temp[i] = data[i];
-        }
-        data = temp;
-    }
 
     @Override
-    public void add(T item){
-        if (size >= data.length) increaseCapacity();
+    public void add(T item) {
+        if (size == data.length) increaseCapacity();
         data[size++] = item;
     }
 
     @Override
     public void add(T item, int index) {
-        if (index > size) throw new IndexOutOfBoundsException();
-        if (size() == data.length) increaseCapacity();
-        for (int i = size; i > index; i--)
+        if (size == data.length) increaseCapacity();
+        for (int i = size; i > index; i--) {
             data[i] = data[i - 1];
-
+        }
         data[index] = item;
         size++;
     }
 
+    @Override
+    public boolean remove(T item) {
+        if (indexOf(item) == -1) return false;
+        remove(indexOf(item));
+        return true;
+    }
+
+    @Override
+    public T remove(int index) {
+        if(index >= size || index < 0) throw new IndexOutOfBoundsException();
+        T removed = (T) data[index];
+        for (int i = index; i < size; i++) {
+            data[i] = data[i + 1];
+        }
+        size--;
+        return removed;
+    }
+
+    @Override
+    public void clear() {
+        data = new Object[10];
+        size = 0;
+    }
+
+    @Override
+    public T get(int index) {
+        if(index >= size || index < 0) throw new IndexOutOfBoundsException();
+        return (T) data[index];
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        for (int i = 0; i < size; i++) {
+            if (data[i].equals(o)) return i;
+        }
+        return -1;
+    }
+
+    @Override
+    public int lastIndexOf(Object o) {
+        for (int i = size - 1; i >= 0; i--) {
+            if (data[i].equals(o)) return i;
+        }
+        return -1;
+    }
+
+    @Override
+    public void sort() {
+        Arrays.sort(data, 0, size);
+    }
+
+
+    @Override
     public Iterator<T> iterator() {
         return new MyIterator();
     }
 
-    private class MyIterator implements Iterator<T>{
+    private class MyIterator implements Iterator<T> {
         private int index;
+
         @Override
         public boolean hasNext() {
-            return index < size;
+            return index < size();
         }
 
         @Override
@@ -63,63 +114,4 @@ public class myArrayList<T> implements myList<T>{
             return get(index++);
         }
     }
-    private void private_remove(int index) {
-        if (index >= size) throw new IndexOutOfBoundsException();
-        for (int i = index; i < size - 1; i++) {
-            data[i] = data[i + 1];
-        }
-        data[size - 1] = null;
-        size--;
-    }
-    @Override
-    public boolean remove(T item) {
-        for (int i = 0; i < size; i++) {
-            if (data[i].equals(item)) {
-                private_remove(i);
-                return true;
-            }
-        }
-        size--;
-        return false;
-    }
-    @Override
-    public T remove(int index) {
-        T temp = get(index);
-        for (int i = index; i < size - 1; i++){
-            data[i] = data[i + 1];
-        }
-        data[size--] = null;
-        return temp;
-    }
-    @Override
-    public T get(int index) {
-        if (index >= size) throw new IndexOutOfBoundsException();
-        return (T) data[index];
-    }
-    @Override
-    public void clear() {
-        size = 0;
-        data = new Object[10];
-    }
-
-    @Override
-    public int indexOf(Object o) {
-        for(int i = 0; i < size; i++){
-            if(data[i].equals(o)) return i;
-        }
-        return -1;
-    }
-
-    @Override
-    public int lastIndexOf(Object o) {
-        for(int i = size - 1; i >= 0; i--){
-            if(data[i].equals(o)) return i;
-        }
-        return -1;
-    }
-    @Override
-    public void sort() {
-        Arrays.sort(data, 0, size);
-    }
-
 }
